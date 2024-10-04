@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.matteo.mybaby2.modules.activities.components.Activities
 import com.matteo.mybaby2.modules.babies.components.Babies
 import com.matteo.mybaby2.ui.theme.MyBaby2Theme
 
@@ -21,9 +22,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyBaby2Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Babies(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+//                    Babies(
+//                        modifier = Modifier.padding(innerPadding)
+//                    )
+                    Activities(modifier = Modifier.padding(innerPadding), babyId = 1)
                 }
             }
         }
