@@ -1,11 +1,15 @@
 package com.matteo.mybaby2.modules.babies.repositories
 
 import com.matteo.mybaby2.common.schemas.Age
+import com.matteo.mybaby2.modules.babies.repositories.MockedBaby.exampleBaby
 import com.matteo.mybaby2.modules.babies.schemas.BabyRead
 import com.matteo.mybaby2.modules.babies.schemas.BabyUpsert
 
+object MockedBaby {
+    val exampleBaby = BabyRead(id = 1, name= "Alessandro", age = Age(1,1,1))
+}
+
 class MockedBabyRepository: IBabyRepository {
-    private val exampleBaby = BabyRead(id = 1, name= "Alessandro", age = Age(1,1,1))
     override fun getAll(): List<BabyRead> {
         print("ciao")
         return listOf(exampleBaby, exampleBaby)
