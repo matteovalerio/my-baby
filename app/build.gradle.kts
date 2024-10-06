@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
 
