@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.modules.babies.BabyViewModel
 import com.matteo.mybaby2.modules.babies.schemas.BabyRead
@@ -18,9 +19,9 @@ import com.matteo.mybaby2.ui.components.LabeledText
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun Babies(viewModel: BabyViewModel = koinViewModel(), modifier: Modifier) {
+fun Babies(navController: NavHostController, viewModel: BabyViewModel = koinViewModel()) {
     val babies = remember { viewModel.babies }
-    return LazyColumn(modifier = modifier.padding(10.dp)) {
+    return LazyColumn(modifier = Modifier.padding(10.dp)) {
         items(babies.value) { baby ->
             Baby(baby)
         }

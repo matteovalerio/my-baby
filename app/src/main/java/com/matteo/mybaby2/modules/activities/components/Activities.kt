@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.schemas.UiState
 import com.matteo.mybaby2.modules.activities.ActivityViewModel
@@ -32,7 +33,11 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun Activities(modifier: Modifier, babyId: Int, viewModel: ActivityViewModel = koinViewModel()) {
+fun Activities(
+    navController: NavHostController,
+    babyId: Int,
+    viewModel: ActivityViewModel = koinViewModel()
+) {
     LaunchedEffect(key1 = babyId) {
         viewModel.getAllActivitiesByBabyId(babyId)
     }
@@ -40,13 +45,13 @@ fun Activities(modifier: Modifier, babyId: Int, viewModel: ActivityViewModel = k
     when (val state = viewModel.allActivitiesUiState.value) {
         is UiState.Error -> Text(text = "Error: ${state.exception.message}") // TODO better error management
         UiState.Loading -> CircularProgressIndicator()
-        is UiState.Success<List<ActivityRead>> -> Inner(modifier, state.data)
+        is UiState.Success<List<ActivityRead>> -> Inner(navController, state.data)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Inner(modifier: Modifier, activities: List<ActivityRead>) {
+private fun Inner(navController: NavHostController, activities: List<ActivityRead>, modifier: Modifier = Modifier) {
     return Scaffold(topBar = {
         CenterAlignedTopAppBar(
             title = {
