@@ -1,6 +1,7 @@
 package com.matteo.mybaby2.koin
 
-import com.matteo.mybaby2.modules.activities.ActivityViewModel
+import com.matteo.mybaby2.modules.activities.ActivitiesViewModel
+import com.matteo.mybaby2.modules.breastfeedings.BreastFeedingViewModel
 import com.matteo.mybaby2.modules.activities.repositories.IActivityRepository
 import com.matteo.mybaby2.modules.activities.repositories.MockedActivityRepository
 import com.matteo.mybaby2.modules.babies.BabyViewModel
@@ -13,10 +14,11 @@ import org.koin.dsl.module
 
 val appModule = module {
     // mocked
-    singleOf(::MockedBabyRepository) {bind<IBabyRepository>()}
-    singleOf(::MockedActivityRepository) {bind<IActivityRepository>()}
+    singleOf(::MockedBabyRepository) { bind<IBabyRepository>() }
+    singleOf(::MockedActivityRepository) { bind<IActivityRepository>() }
 
     // view models
     viewModelOf(::BabyViewModel)
-    viewModelOf(::ActivityViewModel)
+    viewModelOf(::ActivitiesViewModel)
+    viewModelOf(::BreastFeedingViewModel)
 }

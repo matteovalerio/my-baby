@@ -1,5 +1,6 @@
 package com.matteo.mybaby2.modules.activities.components
 
+import android.R.attr.onClick
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,14 +23,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
+import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.common.schemas.UiState
-import com.matteo.mybaby2.modules.activities.ActivityViewModel
+import com.matteo.mybaby2.modules.activities.ActivitiesViewModel
 import com.matteo.mybaby2.modules.activities.schemas.ActivityRead
+import com.matteo.mybaby2.ui.components.FabOption
 import com.matteo.mybaby2.ui.components.LabeledText
+import com.matteo.mybaby2.ui.components.MultiFab
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -36,7 +43,7 @@ import org.koin.androidx.compose.koinViewModel
 fun Activities(
     navController: NavHostController,
     babyId: Int,
-    viewModel: ActivityViewModel = koinViewModel()
+    viewModel: ActivitiesViewModel = koinViewModel()
 ) {
     LaunchedEffect(key1 = babyId) {
         viewModel.getAllActivitiesByBabyId(babyId)
@@ -45,13 +52,18 @@ fun Activities(
     when (val state = viewModel.allActivitiesUiState.value) {
         is UiState.Error -> Text(text = "Error: ${state.exception.message}") // TODO better error management
         UiState.Loading -> CircularProgressIndicator()
-        is UiState.Success<List<ActivityRead>> -> Inner(navController, state.data)
+        is UiState.Success<List<ActivityRead>> -> Inner(navController, babyId, state.data)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Inner(navController: NavHostController, activities: List<ActivityRead>, modifier: Modifier = Modifier) {
+private fun Inner(
+    navController: NavHostController,
+    babyId: Int,
+    activities: List<ActivityRead>,
+    modifier: Modifier = Modifier
+) {
     return Scaffold(topBar = {
         CenterAlignedTopAppBar(
             title = {
@@ -63,17 +75,25 @@ private fun Inner(navController: NavHostController, activities: List<ActivityRea
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
-
-            )
-
+        )
     }, floatingActionButton = {
-        FloatingActionButton(onClick = {/*TODO*/ }) {
-            Icon(Icons.Filled.Add, "FAB")
-        }
+        MultiFab(
+            fabIcon = Icons.Filled.Add,
+            fabOptions = listOf(
+                FabOption(
+                    icon = Icons.Filled.WaterDrop,
+                    text = stringResource(R.string.create_activity)
+                )
+            ),
+            onFabOptionClick = { fabOption ->
+                if (fabOption.icon == Icons.Filled.WaterDrop) {
+                    navController.navigate("${NavigationItem.Activities.route}/$babyId/breastfeeding/create")
+                }
+            }
+        )
     }) { innerPadding ->
         LazyColumn(modifier = modifier.padding(innerPadding)) {
             items(activities.size) { index ->
-
                 ListItem(headlineContent = {
                     Column {
                         Row(

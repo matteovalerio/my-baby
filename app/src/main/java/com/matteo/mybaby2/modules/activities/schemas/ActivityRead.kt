@@ -7,7 +7,6 @@ import kotlin.time.Duration
 data class ActivityRead(
     val id: Int,
     val name: String,
-    val categoryId: Int,
     val baby: BabyRead,
     val breastfeedingActivities: BreastfeedingActivitiesRead,
     val duration: Duration,
