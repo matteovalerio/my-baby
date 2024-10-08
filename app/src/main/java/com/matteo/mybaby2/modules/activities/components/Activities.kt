@@ -1,6 +1,6 @@
 package com.matteo.mybaby2.modules.activities.components
 
-import android.R.attr.onClick
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.WaterDrop
+import androidx.compose.material.icons.filled.Wc
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,8 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -81,13 +80,21 @@ private fun Inner(
             fabIcon = Icons.Filled.Add,
             fabOptions = listOf(
                 FabOption(
-                    icon = Icons.Filled.WaterDrop,
-                    text = stringResource(R.string.create_activity)
+                    icon = Icons.Filled.Fastfood,
+                    text = stringResource(R.string.create_activity),
+                    index = 1
+                ),
+                FabOption(
+                    icon = Icons.Filled.Wc,
+                    text = stringResource(R.string.create_activity),
+                    index = 2
                 )
             ),
             onFabOptionClick = { fabOption ->
-                if (fabOption.icon == Icons.Filled.WaterDrop) {
+                if (fabOption.index == 1) {
                     navController.navigate("${NavigationItem.Activities.route}/$babyId/breastfeeding/create")
+                } else if (fabOption.index == 2) {
+                    navController.navigate("${NavigationItem.Activities.route}/$babyId/pooping/create")
                 }
             }
         )

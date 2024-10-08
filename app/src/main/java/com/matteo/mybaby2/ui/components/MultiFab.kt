@@ -2,7 +2,6 @@ package com.matteo.mybaby2.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
@@ -46,7 +45,7 @@ fun MultiFab(
                         onFabOptionClick(fabOption)
                         expanded = false // Close the menu after click
                     },
-                    modifier = Modifier.padding(top = (index * 56).dp) // Adjust spacing
+                    modifier = Modifier.padding(top = (index * 16).dp) // Adjust spacing
                 )
             }
         }
@@ -77,5 +76,6 @@ fun MiniFab(
 
 data class FabOption(
     val icon: ImageVector,
-    val text: String
+    val text: String,
+    val index: Int
 )

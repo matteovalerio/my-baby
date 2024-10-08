@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.matteo.mybaby2.modules.activities.repositories.IActivityRepository
 import kotlin.math.roundToInt
 
-data class BreastFeeding(val leftBreast: Float, val rightBreast: Float, val notes: String, val date: Long)
 
 class BreastFeedingViewModel(
     private val activityRepository: IActivityRepository,

@@ -1,4 +1,4 @@
-package com.matteo.mybaby2.modules.breastfeedings
+package com.matteo.mybaby2.modules.breastfeedings.components
 
 import DatePickerModal
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
+import com.matteo.mybaby2.common.navigations.NavigationItem
+import com.matteo.mybaby2.modules.breastfeedings.BreastFeedingViewModel
+import com.matteo.mybaby2.modules.breastfeedings.schemas.BreastFeedingUpsert
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -41,7 +44,7 @@ fun UpsertBreastFeeding(
     navHostController: NavHostController,
     babyId: Int,
     viewModel: BreastFeedingViewModel = koinViewModel(),
-    defaultValues: BreastFeeding? = null
+    defaultValues: BreastFeedingUpsert? = null
 ) {
     if(defaultValues != null) {
         viewModel.updateLeftBreastDuration(defaultValues.leftBreast.toFloat())
@@ -145,7 +148,10 @@ fun UpsertBreastFeeding(
             }
             Button(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                onClick = { viewModel.submit() }) {
+                onClick = {
+                    viewModel.submit()
+                    navHostController.navigate("${NavigationItem.Activities.route}/${babyId}")
+                }) {
                 Text(text = stringResource(R.string.save))
             }
         }
