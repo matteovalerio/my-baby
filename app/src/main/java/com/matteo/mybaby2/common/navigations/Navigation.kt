@@ -7,8 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.matteo.mybaby2.modules.activities.components.Activities
-import com.matteo.mybaby2.modules.breastfeedings.UpsertBreastFeeding
+import com.matteo.mybaby2.modules.breastfeedings.components.UpsertBreastFeeding
 import com.matteo.mybaby2.modules.babies.components.Babies
+import com.matteo.mybaby2.modules.poopings.components.UpsertPooping
 
 @Composable
 fun Navigation() {
@@ -37,6 +38,17 @@ fun Navigation() {
                 throw Exception("babyId is required")
             }
             UpsertBreastFeeding(navController, babyId)
+        }
+        composable(
+            "${NavigationItem.Activities.route}/{babyId}/pooping/create",
+            arguments = listOf(
+                navArgument("babyId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val babyId = backStackEntry.arguments?.getInt("babyId")
+            if (babyId == null) {
+                throw Exception("babyId is required")
+            }
+            UpsertPooping(navController, babyId)
         }
     }
 }

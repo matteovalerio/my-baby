@@ -7,6 +7,7 @@ import com.matteo.mybaby2.modules.activities.repositories.MockedActivityReposito
 import com.matteo.mybaby2.modules.babies.BabyViewModel
 import com.matteo.mybaby2.modules.babies.repositories.IBabyRepository
 import com.matteo.mybaby2.modules.babies.repositories.MockedBabyRepository
+import com.matteo.mybaby2.modules.poopings.PoopViewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -21,4 +22,5 @@ val appModule = module {
     viewModelOf(::BabyViewModel)
     viewModelOf(::ActivitiesViewModel)
     viewModelOf(::BreastFeedingViewModel)
+    viewModelOf(::PoopViewModel)
 }

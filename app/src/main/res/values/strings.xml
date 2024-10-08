@@ -14,4 +14,7 @@
     <string name="save">Salva</string>
     <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
+    <string name="add_change_diapers">Aggiungi cambio pannolino</string>
+    <string name="poop">Cacca</string>
+    <string name="piss">Pipì</string>
 </resources>
