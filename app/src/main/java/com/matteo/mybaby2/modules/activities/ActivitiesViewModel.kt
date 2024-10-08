@@ -9,10 +9,9 @@ import com.matteo.mybaby2.modules.activities.schemas.ActivityRead
 import kotlinx.coroutines.launch
 
 
-class ActivityViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
+class ActivitiesViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
     var allActivitiesUiState = mutableStateOf<UiState<List<ActivityRead>>>(UiState.Loading)
         private set
-    var activityUiState = mutableStateOf<UiState<ActivityRead>>(UiState.Loading)
 
     fun getAllActivitiesByBabyId(babyId: Int) {
         viewModelScope.launch {
@@ -26,19 +25,4 @@ class ActivityViewModel(private val activityRepository: IActivityRepository) : V
                 }
         }
     }
-
-    fun getActivityById(id: Int) {
-        viewModelScope.launch {
-            activityUiState.value = UiState.Loading
-            activityUiState.value =
-                try {
-                    UiState.Success(activityRepository.getById(id))
-                } catch (e: Exception) {
-                    UiState.Error(e)
-
-                }
-        }
-    }
-
-
 }

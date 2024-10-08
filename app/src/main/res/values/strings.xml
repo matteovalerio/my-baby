@@ -4,4 +4,14 @@
     <string name="age">Età</string>
     <string name="duration">Durata</string>
     <string name="activities">Attività</string>
+    <string name="create_activity">Crea attività</string>
+    <string name="add_breastfeeding">Aggiungi poppata</string>
+    <string name="minutes">Minuti</string>
+    <string name="left">Sinistra</string>
+    <string name="right">Destra</string>
+    <string name="notes">Note</string>
+    <string name="date">Data</string>
+    <string name="save">Salva</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annulla</string>
 </resources>

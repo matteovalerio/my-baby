@@ -13,7 +13,6 @@ object MockedActivity {
     val exampleActivity = ActivityRead(
         id = 1,
         name = "Feeding",
-        categoryId = 1,
         baby = MockedBaby.exampleBaby, // Assuming you have MockedBaby object
         breastfeedingActivities = BreastfeedingActivitiesRead(
             leftBreast = BreastfeedingActivity(duration = 10.minutes),
