@@ -38,6 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
+import com.matteo.mybaby2.modules.poopings.schemas.PoopingRead
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
 
 
@@ -48,13 +49,14 @@ fun UpsertPooping(
     navController: NavController,
     babyId: Int,
     viewModel: PoopViewModel = koinViewModel(),
-    defaultValues: PoopingUpsert? = null
+    defaultValues: PoopingRead? = null
 ) {
     if(defaultValues!= null){
         viewModel.updateHasPoop(defaultValues.hasPoop)
         viewModel.updateHasPiss(defaultValues.hasPiss)
         viewModel.updateNotes(defaultValues.notes)
         viewModel.updateDate(defaultValues.date)
+        viewModel.updateId(defaultValues.id)
     }
 
     var showDatePicker = remember { mutableStateOf(false) }

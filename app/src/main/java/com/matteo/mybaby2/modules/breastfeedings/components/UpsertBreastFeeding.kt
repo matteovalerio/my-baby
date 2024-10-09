@@ -51,6 +51,7 @@ fun UpsertBreastFeeding(
         viewModel.updateRightBreastDuration(defaultValues.rightBreast.toFloat())
         viewModel.updateNotes(defaultValues.notes)
         viewModel.updateDate(defaultValues.date)
+        viewModel.updateId(defaultValues.id)
     }
     var showDatePicker = remember { mutableStateOf(false) }
     return Scaffold(
