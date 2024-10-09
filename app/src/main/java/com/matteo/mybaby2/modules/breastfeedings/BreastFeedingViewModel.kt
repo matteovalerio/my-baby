@@ -4,8 +4,8 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matteo.mybaby2.modules.activities.repositories.IActivityRepository
 import com.matteo.mybaby2.modules.breastfeedings.repositories.BreastFeedingRepository
+import com.matteo.mybaby2.modules.breastfeedings.schemas.BreastFeedingRead
 import com.matteo.mybaby2.modules.breastfeedings.schemas.BreastFeedingUpsert
 import com.matteo.mybaby2.modules.poopings.PoopUiState
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
@@ -36,6 +36,7 @@ class BreastFeedingViewModel(
         private set
     var uiState = mutableStateOf<UiState>(UiState.Success)
         private set
+    var breastFeedings = mutableStateOf<List<BreastFeedingRead>>(emptyList())
 
     fun updateLeftBreastDuration(duration: Float) {
         this.leftBreastDuration.floatValue = duration.roundToInt().toFloat()
@@ -81,4 +82,14 @@ class BreastFeedingViewModel(
         }
     }
 
+    fun getAllBreastFeedings(){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = repository.getAll()
+                breastFeedings.value = result
+            } catch (exception: Exception) {
+                // TODO handle error
+            }
+        }
+    }
 }

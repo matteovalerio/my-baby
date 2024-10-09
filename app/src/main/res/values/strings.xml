@@ -17,4 +17,7 @@
     <string name="add_change_diapers">Aggiungi cambio pannolino</string>
     <string name="poop">Cacca</string>
     <string name="piss">Pipì</string>
+    <string name="breastfeeding">Poppata</string>">
+    <string name="pooping">Cambio pannolino</string>
+    <string name="weight">Peso</string>
 </resources>

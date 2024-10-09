@@ -32,6 +32,7 @@ class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
         private set
     var uiState = mutableStateOf<PoopUiState>(PoopUiState.Success)
         private set
+    var poopings = mutableStateOf<List<PoopingRead>>(emptyList())
 
     fun updateHasPoop(hasPoop: Boolean) {
         this.hasPoop.value = hasPoop
@@ -73,6 +74,17 @@ class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
                 uiState.value = PoopUiState.Success
             } catch (exception: Exception) {
                 uiState.value = PoopUiState.Error(exception)
+            }
+        }
+    }
+
+    fun getAllPoopings() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = repository.getAll()
+                poopings.value = result
+            } catch (exception: Exception) {
+                // TODO error handling
             }
         }
     }

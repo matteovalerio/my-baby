@@ -8,7 +8,7 @@ import com.matteo.mybaby2.modules.breastfeedings.entities.BreastFeedingEntity
 
 @Dao
 interface BreastFeedingDao {
-    @Query("SELECT * FROM breastfeedingentity")
+    @Query("SELECT * FROM breastfeedingentity ORDER BY date DESC")
     suspend fun getAll(): List<BreastFeedingEntity>
 
     @Query("SELECT * FROM breastfeedingentity WHERE date BETWEEN :startOfDay AND :endOfDay")
