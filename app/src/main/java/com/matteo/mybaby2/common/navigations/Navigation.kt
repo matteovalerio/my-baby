@@ -29,7 +29,7 @@ fun Navigation() {
             UpsertBreastFeeding(navController)
         }
         composable(
-            "${NavigationItem.Activities.route}/{babyId}/pooping/create"
+            "${NavigationItem.Activities.route}/pooping/create"
         ) { backStackEntry ->
             UpsertPooping(navController)
         }

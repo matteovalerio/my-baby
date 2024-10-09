@@ -74,10 +74,12 @@ fun Poopings(
                             text = formattedDate
                         )
                     }
-                    LabeledText(
-                        label = stringResource(R.string.notes),
-                        text = value.notes
-                    )
+                    if(value.notes.isNotEmpty()) {
+                        LabeledText(
+                            label = stringResource(R.string.notes),
+                            text = value.notes
+                        )
+                    }
                     HorizontalDivider()
                 }
             })
