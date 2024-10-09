@@ -1,16 +1,15 @@
 package com.matteo.mybaby2.koin
 
-import com.matteo.mybaby2.modules.activities.ActivitiesViewModel
-import com.matteo.mybaby2.modules.breastfeedings.BreastFeedingViewModel
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.matteo.mybaby2.db.AppDatabase
-import com.matteo.mybaby2.modules.activities.repositories.IActivityRepository
-import com.matteo.mybaby2.modules.activities.repositories.MockedActivityRepository
 import com.matteo.mybaby2.modules.babies.BabyViewModel
 import com.matteo.mybaby2.modules.babies.repositories.IBabyRepository
 import com.matteo.mybaby2.modules.babies.repositories.MockedBabyRepository
+import com.matteo.mybaby2.modules.breastfeedings.BreastFeedingViewModel
 import com.matteo.mybaby2.modules.breastfeedings.daos.BreastFeedingDao
+import com.matteo.mybaby2.modules.breastfeedings.repositories.BreastFeedingRepository
+import com.matteo.mybaby2.modules.breastfeedings.repositories.IBreastFeedingRepository
 import com.matteo.mybaby2.modules.poopings.PoopViewModel
 import com.matteo.mybaby2.modules.poopings.daos.PoopingDao
 import com.matteo.mybaby2.modules.poopings.repositories.IPoopingRepository
@@ -23,12 +22,13 @@ import org.koin.dsl.module
 val appModule = module {
     // mocked
     singleOf(::MockedBabyRepository) { bind<IBabyRepository>() }
-    singleOf(::MockedActivityRepository) { bind<IActivityRepository>() }
+
+    // repositories
     singleOf(::PoopingRepository) { bind<IPoopingRepository>() }
+    singleOf(::BreastFeedingRepository) { bind<IBreastFeedingRepository>() }
 
     // view models
     viewModelOf(::BabyViewModel)
-    viewModelOf(::ActivitiesViewModel)
     viewModelOf(::BreastFeedingViewModel)
     viewModelOf(::PoopViewModel)
 }
@@ -39,10 +39,11 @@ val databaseModule = module {
     single { provideBreastFeedingDao(get()) }
 }
 
-fun provideDb(application: Application) {
-    Room.databaseBuilder(application, AppDatabase::class.java, "mybaby2.db")
+fun provideDb(context: Context): AppDatabase {
+    return Room.databaseBuilder(context, AppDatabase::class.java, "mybaby2.db")
         .fallbackToDestructiveMigration().build()
 }
 
 fun providePoopingDao(appDatabase: AppDatabase): PoopingDao = appDatabase.poopingDao()
-fun provideBreastFeedingDao(appDatabase: AppDatabase): BreastFeedingDao = appDatabase.breastFeedingDao()
+fun provideBreastFeedingDao(appDatabase: AppDatabase): BreastFeedingDao =
+    appDatabase.breastFeedingDao()

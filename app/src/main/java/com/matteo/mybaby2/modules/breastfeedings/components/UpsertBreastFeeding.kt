@@ -42,7 +42,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun UpsertBreastFeeding(
     navHostController: NavHostController,
-    babyId: Int,
     viewModel: BreastFeedingViewModel = koinViewModel(),
     defaultValues: BreastFeedingUpsert? = null
 ) {
@@ -151,7 +150,7 @@ fun UpsertBreastFeeding(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 onClick = {
                     viewModel.submit()
-                    navHostController.navigate("${NavigationItem.Activities.route}/${babyId}")
+                    navHostController.navigate(NavigationItem.Activities.route)
                 }) {
                 Text(text = stringResource(R.string.save))
             }

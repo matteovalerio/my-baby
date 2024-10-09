@@ -14,41 +14,24 @@ import com.matteo.mybaby2.modules.poopings.components.UpsertPooping
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = NavigationItem.Babies.route) {
+    NavHost(navController, startDestination = NavigationItem.Activities.route) {
         composable(NavigationItem.Babies.route) {
             Babies(navController)
         }
         composable(
-            "${NavigationItem.Activities.route}/{babyId}",
-            arguments = listOf(navArgument("babyId") { type = NavType.IntType })
+            NavigationItem.Activities.route,
         ) { backStackEntry ->
-            val babyId = backStackEntry.arguments?.getInt("babyId")
-            if (babyId == null) {
-                throw Exception("babyId is required")
-            }
-            Activities(navController, babyId.toInt())
+            Activities(navController)
         }
         composable(
-            "${NavigationItem.Activities.route}/{babyId}/breastfeeding/create",
-            arguments = listOf(
-                navArgument("babyId") { type = NavType.IntType })
+            "${NavigationItem.Activities.route}/breastfeeding/create"
         ) { backStackEntry ->
-            val babyId = backStackEntry.arguments?.getInt("babyId")
-            if (babyId == null) {
-                throw Exception("babyId is required")
-            }
-            UpsertBreastFeeding(navController, babyId)
+            UpsertBreastFeeding(navController)
         }
         composable(
-            "${NavigationItem.Activities.route}/{babyId}/pooping/create",
-            arguments = listOf(
-                navArgument("babyId") { type = NavType.IntType })
+            "${NavigationItem.Activities.route}/{babyId}/pooping/create"
         ) { backStackEntry ->
-            val babyId = backStackEntry.arguments?.getInt("babyId")
-            if (babyId == null) {
-                throw Exception("babyId is required")
-            }
-            UpsertPooping(navController, babyId)
+            UpsertPooping(navController)
         }
     }
 }

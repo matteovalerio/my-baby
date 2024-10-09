@@ -19,8 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -31,15 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.matteo.mybaby2.modules.poopings.PoopViewModel
-import org.koin.androidx.compose.koinViewModel
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
+import com.matteo.mybaby2.modules.poopings.PoopViewModel
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingRead
-import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
+import org.koin.androidx.compose.koinViewModel
 
 
 // TODO add default values
@@ -47,11 +43,10 @@ import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
 @Composable
 fun UpsertPooping(
     navController: NavController,
-    babyId: Int,
     viewModel: PoopViewModel = koinViewModel(),
     defaultValues: PoopingRead? = null
 ) {
-    if(defaultValues!= null){
+    if (defaultValues != null) {
         viewModel.updateHasPoop(defaultValues.hasPoop)
         viewModel.updateHasPiss(defaultValues.hasPiss)
         viewModel.updateNotes(defaultValues.notes)
@@ -105,7 +100,10 @@ fun UpsertPooping(
                         onDateSelected = { date -> viewModel.updateDate(date) },
                         onDismiss = { showDatePicker.value = false })
                 }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
                     Column {
                         Text(
                             text = stringResource(R.string.poop),
@@ -139,7 +137,7 @@ fun UpsertPooping(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 onClick = {
                     viewModel.submit()
-                    navController.navigate("${NavigationItem.Activities.route}/${babyId}")
+                    navController.navigate(NavigationItem.Activities.route)
                 }) {
                 Text(text = stringResource(R.string.save))
             }
