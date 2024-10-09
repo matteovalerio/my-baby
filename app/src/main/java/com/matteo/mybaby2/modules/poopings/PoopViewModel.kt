@@ -1,10 +1,27 @@
 package com.matteo.mybaby2.modules.poopings
 
-import androidx.compose.runtime.mutableLongStateOf
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.matteo.mybaby2.common.schemas.UiState
+import com.matteo.mybaby2.modules.poopings.repositories.IPoopingRepository
+import com.matteo.mybaby2.modules.poopings.schemas.PoopingRead
+import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class PoopViewModel : ViewModel() {
+sealed class PoopUiState {
+    object Loading : PoopUiState()
+    object Success: PoopUiState()
+    data class Error(val exception: Throwable) : PoopUiState()
+}
+
+class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
+    var id = mutableStateOf<Int?>(null)
+        private set
     var hasPoop = mutableStateOf(false)
         private set
     var hasPiss = mutableStateOf(false)
@@ -12,6 +29,8 @@ class PoopViewModel : ViewModel() {
     var notes = mutableStateOf("")
         private set
     var date = mutableStateOf<Long?>(null)
+        private set
+    var uiState = mutableStateOf<PoopUiState>(PoopUiState.Success)
         private set
 
     fun updateHasPoop(hasPoop: Boolean) {
@@ -29,10 +48,33 @@ class PoopViewModel : ViewModel() {
     fun updateNotes(notes: String) {
         this.notes.value = notes
     }
+    fun updateId(id: Int) {
+        this.id.value = id
+    }
 
     fun submit() {
-        // TODO submit data
+        uiState.value = PoopUiState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                if(date.value == null){
+                    // TODO dirty hack, add validations!
+                    date.value = System.currentTimeMillis()
+                }
 
+                repository.upsertPooping(
+                    PoopingUpsert(
+                        id.value,
+                        hasPoop.value,
+                        hasPiss.value,
+                        notes.value,
+                        date.value!!
+                    )
+                )
+                uiState.value = PoopUiState.Success
+            } catch (exception: Exception) {
+                uiState.value = PoopUiState.Error(exception)
+            }
+        }
     }
 
 }

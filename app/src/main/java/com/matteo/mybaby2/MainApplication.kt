@@ -2,6 +2,7 @@ package com.matteo.mybaby2
 
 import android.app.Application
 import com.matteo.mybaby2.koin.appModule
+import com.matteo.mybaby2.koin.databaseModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -12,7 +13,7 @@ class MainApplication: Application() {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(appModule)
+            modules(appModule, databaseModule)
         }
     }
 }
