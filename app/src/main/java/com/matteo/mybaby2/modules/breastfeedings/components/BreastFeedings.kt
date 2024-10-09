@@ -65,10 +65,12 @@ fun BreastFeedings(
                         }"
                     )
 
-                    LabeledText(
-                        label = stringResource(R.string.notes),
-                        text = viewModel.breastFeedings.value[index].notes
-                    )
+                    if(viewModel.breastFeedings.value[index].notes.isNotEmpty()) {
+                        LabeledText(
+                            label = stringResource(R.string.notes),
+                            text = viewModel.breastFeedings.value[index].notes
+                        )
+                    }
                     HorizontalDivider()
                 }
             })
