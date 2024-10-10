@@ -1,6 +1,6 @@
 package com.matteo.mybaby2.modules.poopings.components
 
-import DatePickerModal
+import DateTimePickerModal
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -77,7 +77,7 @@ fun UpsertPooping(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedTextField(
-                    value = if (viewModel.date.value == null) "" else DateConverters.convertMillisToDate(
+                    value = if (viewModel.date.value == null) "" else DateConverters.formatMillisToDateTime(
                         viewModel.date.value!!
                     ),
                     onValueChange = { },
@@ -96,7 +96,7 @@ fun UpsertPooping(
                         .height(64.dp)
                 )
                 if (showDatePicker.value) {
-                    DatePickerModal(
+                    DateTimePickerModal(
                         onDateSelected = { date -> viewModel.updateDate(date) },
                         onDismiss = { showDatePicker.value = false })
                 }

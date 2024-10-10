@@ -1,13 +1,17 @@
 package com.matteo.mybaby2.modules.activities.components
 
+import DateTimePickerModal
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Wc
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Fastfood
-import androidx.compose.material.icons.outlined.MonitorWeight
 import androidx.compose.material.icons.outlined.Wc
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,32 +21,59 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
+import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.breastfeedings.components.BreastFeedings
 import com.matteo.mybaby2.modules.poopings.components.Poopings
+import com.matteo.mybaby2.ui.components.DatePickerModal
 import com.matteo.mybaby2.ui.components.FabOption
 import com.matteo.mybaby2.ui.components.MultiFab
+import java.time.Instant
 
+
+enum class Tabs {
+    BreastFeeding, Pooping, Graphs
+}
+
+
+@Composable
+private fun getItemName(tab: Tabs): String {
+    return when (tab) {
+        Tabs.BreastFeeding -> stringResource(R.string.breastfeeding)
+        Tabs.Pooping -> stringResource(R.string.pooping)
+        Tabs.Graphs -> stringResource(R.string.graphs)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Activities(
     navController: NavHostController,
 ) {
-    var selectedItem = remember { mutableIntStateOf(0) }
-    val items = listOf(stringResource(R.string.breastfeeding), stringResource(R.string.pooping),stringResource(R.string.weight))
-    val selectedIcons = listOf(Icons.Filled.Fastfood, Icons.Filled.Wc, Icons.Filled.MonitorWeight)
+    var selectedItem = rememberSaveable { mutableStateOf(Tabs.BreastFeeding) }
+    val items = listOf(Tabs.BreastFeeding, Tabs.Pooping, Tabs.Graphs)
+    val selectedIcons = listOf(Icons.Filled.Fastfood, Icons.Filled.Wc, Icons.Filled.BarChart)
     val unselectedIcons =
-        listOf(Icons.Outlined.Fastfood, Icons.Outlined.Wc, Icons.Outlined.MonitorWeight)
-
+        listOf(Icons.Outlined.Fastfood, Icons.Outlined.Wc, Icons.Outlined.BarChart)
+    val selectedDate = remember { mutableLongStateOf(Instant.now().toEpochMilli()) }
+    val isSelectingDate = remember { mutableStateOf(false) }
 
     return Scaffold(topBar = {
         CenterAlignedTopAppBar(
@@ -86,22 +117,56 @@ fun Activities(
                 NavigationBarItem(
                     icon = {
                         Icon(
-                            if (selectedItem.intValue == index) selectedIcons[index] else unselectedIcons[index],
-                            contentDescription = item
+                            if (selectedItem.value == item) selectedIcons[index] else unselectedIcons[index],
+                            contentDescription = getItemName(item)
                         )
                     },
-                    label = { Text(item) },
-                    selected = selectedItem.intValue == index,
-                    onClick = { selectedItem.intValue = index }
+                    label = { Text(getItemName(item)) },
+                    selected = selectedItem.value == item,
+                    onClick = { selectedItem.value = item }
                 )
             }
         }
     }) { innerPadding ->
-        if(selectedItem.intValue == 0){
-            BreastFeedings(Modifier.padding(innerPadding),1)
-        }
-        if(selectedItem.intValue == 1){
-            Poopings(Modifier.padding(innerPadding),1)
+        Column (
+            modifier = Modifier.padding(innerPadding).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally){
+            if(selectedItem.value!= Tabs.Graphs) {
+                TextButton(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterHorizontally),
+                    onClick = { isSelectingDate.value = true }) {
+                    Text(
+                        text = DateConverters.formatMillisToDate(
+                            selectedDate.longValue
+                        )
+                    )
+                    if (isSelectingDate.value) {
+                        DatePickerModal(
+                            onDateSelected = { date ->
+                                if (date != null) {
+                                    selectedDate.longValue = date
+                                }
+                            },
+                            onDismiss = { isSelectingDate.value = false },
+                            initialValue = selectedDate.longValue
+                        )
+                    }
+
+                }
+            }
+            when (selectedItem.value) {
+                Tabs.BreastFeeding -> BreastFeedings(date = selectedDate.longValue)
+
+                Tabs.Pooping -> Poopings(date = selectedDate.longValue)
+
+                Tabs.Graphs -> Placeholder(
+                    width = TextUnit(100f, TextUnitType.Sp),
+                    height = TextUnit(100f, TextUnitType.Sp),
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                )
+            }
         }
     }
 }

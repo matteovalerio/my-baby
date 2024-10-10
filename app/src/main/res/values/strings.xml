@@ -20,4 +20,6 @@
     <string name="breastfeeding">Poppata</string>">
     <string name="pooping">Cambio pannolino</string>
     <string name="weight">Peso</string>
+    <string name="graphs">Grafici</string>
+    <string name="no_data">Nessun dato</string>
 </resources>
