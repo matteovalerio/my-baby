@@ -12,6 +12,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Instant
+import java.time.ZoneId
 
 sealed class PoopUiState {
     object Loading : PoopUiState()
@@ -78,10 +80,11 @@ class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
         }
     }
 
-    fun getAllPoopings() {
+    fun getAllPoopingsByDate(date: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = repository.getAll()
+                val localeDate = Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate()
+                val result = repository.getAllByDate(localeDate)
                 poopings.value = result
             } catch (exception: Exception) {
                 // TODO error handling

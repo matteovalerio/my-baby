@@ -11,6 +11,9 @@ import com.matteo.mybaby2.modules.poopings.PoopUiState
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import kotlin.math.roundToInt
 
 
@@ -86,6 +89,18 @@ class BreastFeedingViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = repository.getAll()
+                breastFeedings.value = result
+            } catch (exception: Exception) {
+                // TODO handle error
+            }
+        }
+    }
+
+    fun getAllBreastFeedingsByDate(date: Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val localeDate = Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate()
+                val result = repository.getAllByDate(localeDate)
                 breastFeedings.value = result
             } catch (exception: Exception) {
                 // TODO handle error

@@ -1,6 +1,6 @@
 package com.matteo.mybaby2.modules.breastfeedings.components
 
-import DatePickerModal
+import DateTimePickerModal
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,7 +76,7 @@ fun UpsertBreastFeeding(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedTextField(
-                    value = if (viewModel.date.value == null) "" else DateConverters.convertMillisToDate(
+                    value = if (viewModel.date.value == null) "" else DateConverters.formatMillisToDateTime(
                         viewModel.date.value!!
                     ),
                     onValueChange = { },
@@ -95,7 +95,7 @@ fun UpsertBreastFeeding(
                         .height(64.dp)
                 )
                 if (showDatePicker.value) {
-                    DatePickerModal(
+                    DateTimePickerModal(
                         onDateSelected = { date -> viewModel.updateDate(date) },
                         onDismiss = { showDatePicker.value = false })
                 }
