@@ -34,6 +34,9 @@ fun Poopings(
     LaunchedEffect(date) {
         viewModel.getAllPoopingsByDate(date)
     }
+    if(viewModel.poopings.value.isEmpty()){
+        return Text(stringResource(R.string.no_data), modifier = modifier)
+    }
     return LazyColumn(modifier = modifier) {
         items(viewModel.poopings.value.size) { index ->
             val value = viewModel.poopings.value[index]
