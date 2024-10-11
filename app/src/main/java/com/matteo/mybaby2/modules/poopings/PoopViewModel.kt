@@ -1,17 +1,13 @@
 package com.matteo.mybaby2.modules.poopings
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matteo.mybaby2.common.schemas.UiState
 import com.matteo.mybaby2.modules.poopings.repositories.IPoopingRepository
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingRead
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingUpsert
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.ZoneId
 
