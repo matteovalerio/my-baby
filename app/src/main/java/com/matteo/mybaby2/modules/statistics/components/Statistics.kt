@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
@@ -50,58 +52,66 @@ fun Statistics(viewModel: StatisticsViewModel = koinViewModel()) {
 
 @Composable
 private fun Inner(breastFeedingStats: List<StatisticRead>, poopingStats: List<StatisticRead>) {
+
     return Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .height(300.dp),
-            data = listOf(
-                Line(
-                    label = stringResource(R.string.breastfeeding),
-                    values = breastFeedingStats.map { it.amount.toDouble() },
-                    color = SolidColor(MaterialTheme.colorScheme.primary),
-                    firstGradientFillColor = MaterialTheme.colorScheme.primary.copy(alpha = .5f),
-                    secondGradientFillColor = Color.Transparent,
-                    strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
-                    gradientAnimationDelay = 1000,
-                    drawStyle = DrawStyle.Stroke(width = 2.dp),
-                )
-            ),
-            animationMode = AnimationMode.Together(delayBuilder = {
-                it * 500L
-            }),
-            labelProperties = LabelProperties(
-                enabled = true,
-                labels = breastFeedingStats.map { DateConverters.formatMillisToDate(it.date) })
-        )
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(8.dp),
-            data = listOf(
-                Line(
-                    label = stringResource(R.string.pooping),
-                    values = poopingStats.map { it.amount.toDouble() },
-                    color = SolidColor(MaterialTheme.colorScheme.secondary),
-                    firstGradientFillColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f),
-                    secondGradientFillColor = Color.Transparent,
-                    strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
-                    gradientAnimationDelay = 1000,
-                    drawStyle = DrawStyle.Stroke(width = 2.dp),
-                )
-            ),
-            animationMode = AnimationMode.Together(delayBuilder = {
-                it * 500L
-            }),
-            labelProperties = LabelProperties(
-                enabled = true,
-                labels = poopingStats.map { DateConverters.formatMillisToDate(it.date) })
-        )
+        if(breastFeedingStats.isNotEmpty()) {
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .height(300.dp),
+                data = listOf(
+                    Line(
+                        label = stringResource(R.string.breastfeeding),
+                        values = breastFeedingStats.map { it.amount.toDouble() },
+                        color = SolidColor(MaterialTheme.colorScheme.primary),
+                        firstGradientFillColor = MaterialTheme.colorScheme.primary.copy(alpha = .5f),
+                        secondGradientFillColor = Color.Transparent,
+                        strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
+                        gradientAnimationDelay = 1000,
+                        drawStyle = DrawStyle.Stroke(width = 2.dp),
+                    )
+                ),
+                animationMode = AnimationMode.Together(delayBuilder = {
+                    it * 500L
+                }),
+                labelProperties = LabelProperties(
+                    enabled = true,
+                    labels = breastFeedingStats.map { DateConverters.formatMillisToDate(it.date) })
+            )
+        }
+        if(poopingStats.isNotEmpty()) {
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(8.dp),
+                data = listOf(
+                    Line(
+                        label = stringResource(R.string.pooping),
+                        values = poopingStats.map { it.amount.toDouble() },
+                        color = SolidColor(MaterialTheme.colorScheme.secondary),
+                        firstGradientFillColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f),
+                        secondGradientFillColor = Color.Transparent,
+                        strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
+                        gradientAnimationDelay = 1000,
+                        drawStyle = DrawStyle.Stroke(width = 2.dp),
+                    )
+                ),
+                animationMode = AnimationMode.Together(delayBuilder = {
+                    it * 500L
+                }),
+                labelProperties = LabelProperties(
+                    enabled = true,
+                    labels = poopingStats.map { DateConverters.formatMillisToDate(it.date) })
+            )
+        }
+        if(poopingStats.isEmpty() && breastFeedingStats.isEmpty()) {
+            Text(stringResource(R.string.no_data), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        }
     }
 
 }
