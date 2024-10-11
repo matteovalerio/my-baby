@@ -1,19 +1,29 @@
 package com.matteo.mybaby2.modules.breastfeedings.components
 
+import android.R.attr.text
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,7 +46,7 @@ fun BreastFeedings(
     date: Long,
     navController: NavHostController,
     viewModel: BreastFeedingViewModel = koinViewModel()
-    ) {
+) {
     LaunchedEffect(date) {
         viewModel.getAllBreastFeedingsByDate(date)
     }
@@ -44,22 +54,47 @@ fun BreastFeedings(
         return Text(stringResource(R.string.no_data), modifier = modifier)
     }
 
-    return LazyColumn(modifier = modifier) {
-        items(viewModel.breastFeedings.value.size) { index ->
-            BreastFeeding(
-                viewModel.breastFeedings.value[index],
-                onRemove = {
-                    viewModel.deleteBreastfeeding(it)
-                    viewModel.getAllBreastFeedingsByDate(date)
-                },
-                onEdit = { navController.navigate("${NavigationItem.Activities.route}/breastfeeding/update/${it.id}") }
-            )
+    return Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        val leftBreastFeedings = viewModel.breastFeedings.value.filter { it.leftBreast > 0 }
+        val totalLeftBreast = leftBreastFeedings.sumOf { it.leftBreast.toInt() }
+        val rightBreastFeedings = viewModel.breastFeedings.value.filter { it.rightBreast > 0 }
+        val totalRightBreast = rightBreastFeedings.sumOf { it.rightBreast.toInt() }
+        Text(
+            stringResource(
+                R.string.left_breast,
+                totalLeftBreast
+            ),
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Text(
+            stringResource(
+                R.string.right_breast,
+                totalRightBreast
+            ),
+            style = MaterialTheme.typography.bodySmall,
+        )
+
+        LazyColumn {
+            items(viewModel.breastFeedings.value.size) { index ->
+                BreastFeeding(
+                    viewModel.breastFeedings.value[index],
+                    onRemove = {
+                        viewModel.deleteBreastfeeding(it)
+                        viewModel.getAllBreastFeedingsByDate(date)
+                    },
+                    onEdit = { navController.navigate("${NavigationItem.Activities.route}/breastfeeding/update/${it.id}") }
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun BreastFeeding(breastFeeding: BreastFeedingRead, onRemove: (item: BreastFeedingRead) -> Unit, onEdit: (item: BreastFeedingRead) -> Unit) {
+private fun BreastFeeding(
+    breastFeeding: BreastFeedingRead,
+    onRemove: (item: BreastFeedingRead) -> Unit,
+    onEdit: (item: BreastFeedingRead) -> Unit
+) {
     val context = LocalContext.current
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
@@ -87,6 +122,13 @@ private fun BreastFeeding(breastFeeding: BreastFeedingRead, onRemove: (item: Bre
         content = {
             ListItem(headlineContent = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val date = Date(breastFeeding.date)
+                    val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+                    val formattedDate = formatter.format(date)
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Icon(imageVector = Icons.Default.AccessTime, contentDescription = "time", modifier = Modifier.fillMaxWidth(.05f))
+                        Text(text = formattedDate, style = MaterialTheme.typography.bodySmall)
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -100,22 +142,17 @@ private fun BreastFeeding(breastFeeding: BreastFeedingRead, onRemove: (item: Bre
                             }"
                         )
 
-                        val date = Date(breastFeeding.date)
-                        val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                        val formattedDate = formatter.format(date)
                         LabeledText(
-                            label = stringResource(R.string.date),
-                            text = formattedDate
+                            label = stringResource(R.string.right),
+                            text = "${breastFeeding.rightBreast.toInt()} ${
+                                stringResource(
+                                    R.string.minutes
+                                )
+                            }"
                         )
+                        Spacer(Modifier)
                     }
-                    LabeledText(
-                        label = stringResource(R.string.right),
-                        text = "${breastFeeding.rightBreast.toInt()} ${
-                            stringResource(
-                                R.string.minutes
-                            )
-                        }"
-                    )
+
 
                     if (breastFeeding.notes.isNotEmpty()) {
                         LabeledText(

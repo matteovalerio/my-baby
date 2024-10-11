@@ -23,4 +23,8 @@
     <string name="weight">Peso</string>
     <string name="graphs">Grafici</string>
     <string name="no_data">Nessun dato</string>
+    <string name="poop_number">Numero di cacca: %1$s</string>
+    <string name="piss_number">Numero di pipì: %1$s</string>
+    <string name="left_breast">Sinistra: %1$s min.</string>
+    <string name="right_breast">Destra: %1$s min.</string>
 </resources>
