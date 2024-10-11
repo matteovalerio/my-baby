@@ -116,7 +116,7 @@ fun UpsertPooping(
                             text = stringResource(R.string.piss),
                             style = MaterialTheme.typography.labelMedium
                         )
-                        Switch(viewModel.hasPiss.value, onCheckedChange = viewModel::updateHasPoop)
+                        Switch(viewModel.hasPiss.value, onCheckedChange = viewModel::updateHasPiss)
                     }
                 }
 
