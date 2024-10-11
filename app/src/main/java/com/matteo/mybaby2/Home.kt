@@ -60,13 +60,15 @@ private fun getItemName(tab: Tabs): String {
 @Composable
 fun Home(
     navController: NavHostController,
+    date: Long? = null,
+    tab: Int? = null
 ) {
-    var selectedItem = rememberSaveable { mutableStateOf(Tabs.BreastFeeding) }
+    var selectedItem = rememberSaveable { mutableStateOf(if (tab != null) Tabs.entries[tab] else Tabs.BreastFeeding) }
     val items = listOf(Tabs.BreastFeeding, Tabs.Pooping, Tabs.Graphs)
     val selectedIcons = listOf(Icons.Filled.Fastfood, Icons.Filled.Wc, Icons.Filled.BarChart)
     val unselectedIcons =
         listOf(Icons.Outlined.Fastfood, Icons.Outlined.Wc, Icons.Outlined.BarChart)
-    val selectedDate = remember { mutableLongStateOf(Instant.now().toEpochMilli()) }
+    val selectedDate = remember { mutableLongStateOf(date ?:Instant.now().toEpochMilli()) }
     val isSelectingDate = remember { mutableStateOf(false) }
 
     return Scaffold(topBar = {
