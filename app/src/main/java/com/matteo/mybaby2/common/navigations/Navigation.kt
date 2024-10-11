@@ -7,17 +7,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.matteo.mybaby2.Home
+import com.matteo.mybaby2.Tabs
 import com.matteo.mybaby2.modules.breastfeedings.components.UpsertBreastFeeding
 import com.matteo.mybaby2.modules.poopings.components.UpsertPooping
+import java.time.Instant
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = NavigationItem.Activities.route) {
+    val now = Instant.now().toEpochMilli()
+    NavHost(navController, startDestination = "${NavigationItem.Activities.route}/$now/${Tabs.BreastFeeding.ordinal}") {
         composable(
-            NavigationItem.Activities.route,
+            "${NavigationItem.Activities.route}/{date}/{tab}",
+            listOf(navArgument("date") { type = NavType.LongType }, navArgument("tab") { type = NavType.IntType })
         ) { backStackEntry ->
-            Home(navController)
+            val date = backStackEntry.arguments?.getLong("date")
+            val tab = backStackEntry.arguments?.getInt("tab")
+            Home(navController, date, tab)
         }
         composable(
             "${NavigationItem.Activities.route}/breastfeeding/create"

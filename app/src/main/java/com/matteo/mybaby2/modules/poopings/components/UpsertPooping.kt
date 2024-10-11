@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.matteo.mybaby2.R
+import com.matteo.mybaby2.Tabs
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.poopings.PoopViewModel
@@ -135,7 +136,7 @@ fun UpsertPooping(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 onClick = {
                     viewModel.submit()
-                    navController.navigate(NavigationItem.Activities.route)
+                    navController.navigate("${NavigationItem.Activities.route}/${viewModel.date.value}/${Tabs.Pooping.ordinal}")
                 }) {
                 Text(text = stringResource(R.string.save))
             }

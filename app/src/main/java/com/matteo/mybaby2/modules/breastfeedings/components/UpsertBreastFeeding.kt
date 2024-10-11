@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
+import com.matteo.mybaby2.Tabs
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.breastfeedings.BreastFeedingViewModel
@@ -114,7 +115,7 @@ fun UpsertBreastFeeding(
                             activeTrackColor = MaterialTheme.colorScheme.secondary,
                             inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer
                         ),
-                        valueRange = 1f..60f
+                        valueRange = 0f..60f
                     )
                 }
                 Column {
@@ -130,7 +131,7 @@ fun UpsertBreastFeeding(
                             activeTrackColor = MaterialTheme.colorScheme.secondary,
                             inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer
                         ),
-                        valueRange = 1f..60f
+                        valueRange = 0f..60f
                     )
                 }
 
@@ -151,7 +152,7 @@ fun UpsertBreastFeeding(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 onClick = {
                     viewModel.submit()
-                    navHostController.navigate(NavigationItem.Activities.route)
+                    navHostController.navigate("${NavigationItem.Activities.route}/${viewModel.date.value}/${Tabs.BreastFeeding.ordinal}")
                 }) {
                 Text(text = stringResource(R.string.save))
             }
