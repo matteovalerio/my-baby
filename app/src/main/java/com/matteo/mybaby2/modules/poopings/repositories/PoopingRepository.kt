@@ -23,6 +23,10 @@ class PoopingRepository(private val poopingDao: PoopingDao) : IPoopingRepository
         return poopings.map(::fromEntity)
     }
 
+    override suspend fun getById(id: Int): PoopingRead? {
+        return poopingDao.getPoopingById(id)?.let(::fromEntity)
+    }
+
     override suspend fun upsertPooping(pooping: PoopingUpsert) {
         poopingDao.insertPooping(toEntity(pooping))
     }
@@ -30,5 +34,9 @@ class PoopingRepository(private val poopingDao: PoopingDao) : IPoopingRepository
     override suspend fun getPoopingById(id: Int): PoopingRead? {
         val pooping = poopingDao.getPoopingById(id)
         return pooping?.let(::fromEntity)
+    }
+
+    override suspend fun deletePooping(pooping: PoopingRead) {
+        poopingDao.deletePooping(toEntity(pooping))
     }
 }

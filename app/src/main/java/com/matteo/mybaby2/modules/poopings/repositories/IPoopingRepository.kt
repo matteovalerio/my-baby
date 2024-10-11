@@ -7,6 +7,8 @@ import java.time.LocalDate
 interface IPoopingRepository {
     suspend fun getAll(): List<PoopingRead>
     suspend fun getAllByDate(date: LocalDate): List<PoopingRead>
+    suspend fun getById(id: Int): PoopingRead?
     suspend fun upsertPooping(pooping: PoopingUpsert)
     suspend fun getPoopingById(id: Int): PoopingRead?
+    suspend fun deletePooping(pooping: PoopingRead)
 }
