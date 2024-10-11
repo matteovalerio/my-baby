@@ -1,6 +1,5 @@
-package com.matteo.mybaby2.modules.activities.components
+package com.matteo.mybaby2
 
-import DateTimePickerModal
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,17 +30,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavHostController
-import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.breastfeedings.components.BreastFeedings
 import com.matteo.mybaby2.modules.poopings.components.Poopings
+import com.matteo.mybaby2.modules.statistics.components.Statistics
 import com.matteo.mybaby2.ui.components.DatePickerModal
 import com.matteo.mybaby2.ui.components.FabOption
 import com.matteo.mybaby2.ui.components.MultiFab
@@ -64,7 +58,7 @@ private fun getItemName(tab: Tabs): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Activities(
+fun Home(
     navController: NavHostController,
 ) {
     var selectedItem = rememberSaveable { mutableStateOf(Tabs.BreastFeeding) }
@@ -79,7 +73,7 @@ fun Activities(
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    text = stringResource(R.string.activities),
+                    text = getItemName(selectedItem.value),
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -88,28 +82,30 @@ fun Activities(
             ),
         )
     }, floatingActionButton = {
-        MultiFab(
-            fabIcon = Icons.Filled.Add,
-            fabOptions = listOf(
-                FabOption(
-                    icon = Icons.Filled.Fastfood,
-                    text = stringResource(R.string.create_activity),
-                    index = 1
+        if(selectedItem.value!= Tabs.Graphs) {
+            MultiFab(
+                fabIcon = Icons.Filled.Add,
+                fabOptions = listOf(
+                    FabOption(
+                        icon = Icons.Filled.Fastfood,
+                        text = stringResource(R.string.create_activity),
+                        index = 1
+                    ),
+                    FabOption(
+                        icon = Icons.Filled.Wc,
+                        text = stringResource(R.string.create_activity),
+                        index = 2
+                    )
                 ),
-                FabOption(
-                    icon = Icons.Filled.Wc,
-                    text = stringResource(R.string.create_activity),
-                    index = 2
-                )
-            ),
-            onFabOptionClick = { fabOption ->
-                if (fabOption.index == 1) {
-                    navController.navigate("${NavigationItem.Activities.route}/breastfeeding/create")
-                } else if (fabOption.index == 2) {
-                    navController.navigate("${NavigationItem.Activities.route}/pooping/create")
+                onFabOptionClick = { fabOption ->
+                    if (fabOption.index == 1) {
+                        navController.navigate("${NavigationItem.Activities.route}/breastfeeding/create")
+                    } else if (fabOption.index == 2) {
+                        navController.navigate("${NavigationItem.Activities.route}/pooping/create")
+                    }
                 }
-            }
-        )
+            )
+        }
     }, bottomBar = {
 
         NavigationBar {
@@ -129,7 +125,9 @@ fun Activities(
         }
     }) { innerPadding ->
         Column (
-            modifier = Modifier.padding(innerPadding).fillMaxWidth(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally){
             if(selectedItem.value!= Tabs.Graphs) {
                 TextButton(
@@ -161,11 +159,7 @@ fun Activities(
 
                 Tabs.Pooping -> Poopings(date = selectedDate.longValue)
 
-                Tabs.Graphs -> Placeholder(
-                    width = TextUnit(100f, TextUnitType.Sp),
-                    height = TextUnit(100f, TextUnitType.Sp),
-                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                )
+                Tabs.Graphs -> Statistics()
             }
         }
     }
