@@ -10,6 +10,10 @@ import java.time.LocalTime
 import java.time.ZoneId
 
 class PoopingRepository(private val poopingDao: PoopingDao) : IPoopingRepository {
+    override suspend fun getAll(): List<PoopingRead> {
+        return poopingDao.getAll().map(::fromEntity)
+    }
+
     override suspend fun getAllByDate(date:LocalDate): List<PoopingRead> {
         val zoneId = ZoneId.systemDefault()
         val startOfDay = date.atStartOfDay(zoneId).toInstant().toEpochMilli()

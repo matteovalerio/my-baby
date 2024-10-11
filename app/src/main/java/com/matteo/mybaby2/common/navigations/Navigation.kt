@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.matteo.mybaby2.modules.activities.components.Activities
+import com.matteo.mybaby2.Home
 import com.matteo.mybaby2.modules.breastfeedings.components.UpsertBreastFeeding
 import com.matteo.mybaby2.modules.poopings.components.UpsertPooping
 
@@ -15,7 +15,7 @@ fun Navigation() {
         composable(
             NavigationItem.Activities.route,
         ) { backStackEntry ->
-            Activities(navController)
+            Home(navController)
         }
         composable(
             "${NavigationItem.Activities.route}/breastfeeding/create"

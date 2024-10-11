@@ -11,6 +11,7 @@ import com.matteo.mybaby2.modules.poopings.PoopViewModel
 import com.matteo.mybaby2.modules.poopings.daos.PoopingDao
 import com.matteo.mybaby2.modules.poopings.repositories.IPoopingRepository
 import com.matteo.mybaby2.modules.poopings.repositories.PoopingRepository
+import com.matteo.mybaby2.modules.statistics.StatisticsViewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -25,6 +26,7 @@ val appModule = module {
     // view models
     viewModelOf(::BreastFeedingViewModel)
     viewModelOf(::PoopViewModel)
+    viewModelOf(::StatisticsViewModel)
 }
 
 val databaseModule = module {

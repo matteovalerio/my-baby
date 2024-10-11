@@ -56,7 +56,8 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    ksp("androidx.room:room-compiler:2.5.0")
+    implementation(libs.compose.charts)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
 
