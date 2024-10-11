@@ -1,11 +1,18 @@
 package com.matteo.mybaby2
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Wc
@@ -14,7 +21,9 @@ import androidx.compose.material.icons.outlined.Fastfood
 import androidx.compose.material.icons.outlined.Wc
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -40,6 +49,7 @@ import com.matteo.mybaby2.ui.components.DatePickerModal
 import com.matteo.mybaby2.ui.components.FabOption
 import com.matteo.mybaby2.ui.components.MultiFab
 import java.time.Instant
+import java.time.ZoneId
 
 
 enum class Tabs {
@@ -132,30 +142,40 @@ fun Home(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally){
             if(selectedItem.value!= Tabs.Graphs) {
-                TextButton(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.CenterHorizontally),
-                    onClick = { isSelectingDate.value = true }) {
-                    Text(
-                        text = DateConverters.formatMillisToDate(
-                            selectedDate.longValue
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    IconButton(onClick = {
+                        val date = Instant.ofEpochMilli(selectedDate.longValue).atZone(ZoneId.systemDefault()).toLocalDate()
+                        selectedDate.longValue = date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowLeft, contentDescription = "Back") }
+                    TextButton(
+                        modifier = Modifier
+                            .wrapContentSize(),
+                        onClick = { isSelectingDate.value = true }) {
+                        Text(
+                            text = DateConverters.formatMillisToDate(
+                                selectedDate.longValue
+                            )
                         )
-                    )
-                    if (isSelectingDate.value) {
-                        DatePickerModal(
-                            onDateSelected = { date ->
-                                if (date != null) {
-                                    selectedDate.longValue = date
-                                }
-                            },
-                            onDismiss = { isSelectingDate.value = false },
-                            initialValue = selectedDate.longValue
-                        )
-                    }
+                        if (isSelectingDate.value) {
+                            DatePickerModal(
+                                onDateSelected = { date ->
+                                    if (date != null) {
+                                        selectedDate.longValue = date
+                                    }
+                                },
+                                onDismiss = { isSelectingDate.value = false },
+                                initialValue = selectedDate.longValue
+                            )
+                        }
 
+                    }
+                    IconButton(onClick = {
+                        val date = Instant.ofEpochMilli(selectedDate.longValue).atZone(ZoneId.systemDefault()).toLocalDate()
+                        selectedDate.longValue = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight, contentDescription = "Forward") }
                 }
             }
+            HorizontalDivider()
             when (selectedItem.value) {
                 Tabs.BreastFeeding -> BreastFeedings(date = selectedDate.longValue, navController = navController)
 
