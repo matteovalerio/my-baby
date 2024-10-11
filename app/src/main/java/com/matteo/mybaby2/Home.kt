@@ -157,7 +157,7 @@ fun Home(
             when (selectedItem.value) {
                 Tabs.BreastFeeding -> BreastFeedings(date = selectedDate.longValue, navController = navController)
 
-                Tabs.Pooping -> Poopings(date = selectedDate.longValue)
+                Tabs.Pooping -> Poopings(date = selectedDate.longValue, navController = navController)
 
                 Tabs.Graphs -> Statistics()
             }

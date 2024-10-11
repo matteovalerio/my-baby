@@ -23,6 +23,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,7 +35,6 @@ import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.poopings.PoopViewModel
-import com.matteo.mybaby2.modules.poopings.schemas.PoopingRead
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -44,14 +44,12 @@ import org.koin.androidx.compose.koinViewModel
 fun UpsertPooping(
     navController: NavController,
     viewModel: PoopViewModel = koinViewModel(),
-    defaultValues: PoopingRead? = null
+    id: Int? = null
 ) {
-    if (defaultValues != null) {
-        viewModel.updateHasPoop(defaultValues.hasPoop)
-        viewModel.updateHasPiss(defaultValues.hasPiss)
-        viewModel.updateNotes(defaultValues.notes)
-        viewModel.updateDate(defaultValues.date)
-        viewModel.updateId(defaultValues.id)
+    LaunchedEffect(id) {
+        if (id != null) {
+            viewModel.patchForm(id)
+        }
     }
 
     var showDatePicker = remember { mutableStateOf(false) }

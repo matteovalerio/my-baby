@@ -24,4 +24,13 @@ object PoopingMappings {
             date = schema.date,
         )
     }
+    fun toEntity(schema: PoopingRead): PoopingEntity {
+        return PoopingEntity(
+            id = schema.id,
+            hasPoop = schema.hasPoop,
+            hasPiss = schema.hasPiss,
+            notes = schema.notes,
+            date = schema.date,
+        )
+    }
 }

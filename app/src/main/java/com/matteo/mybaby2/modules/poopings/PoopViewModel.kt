@@ -13,7 +13,7 @@ import java.time.ZoneId
 
 sealed class PoopUiState {
     object Loading : PoopUiState()
-    object Success: PoopUiState()
+    object Success : PoopUiState()
     data class Error(val exception: Throwable) : PoopUiState()
 }
 
@@ -28,7 +28,7 @@ class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
         private set
     var date = mutableStateOf<Long?>(null)
         private set
-    var uiState = mutableStateOf<PoopUiState>(PoopUiState.Success)
+    var uiState = mutableStateOf<PoopUiState>(PoopUiState.Loading)
         private set
     var poopings = mutableStateOf<List<PoopingRead>>(emptyList())
 
@@ -47,15 +47,12 @@ class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
     fun updateNotes(notes: String) {
         this.notes.value = notes
     }
-    fun updateId(id: Int) {
-        this.id.value = id
-    }
 
     fun submit() {
         uiState.value = PoopUiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                if(date.value == null){
+                if (date.value == null) {
                     // TODO dirty hack, add validations!
                     date.value = System.currentTimeMillis()
                 }
@@ -79,11 +76,43 @@ class PoopViewModel(private val repository: IPoopingRepository) : ViewModel() {
     fun getAllPoopingsByDate(date: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val localeDate = Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate()
+                val localeDate =
+                    Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate()
                 val result = repository.getAllByDate(localeDate)
                 poopings.value = result
             } catch (exception: Exception) {
                 // TODO error handling
+            }
+        }
+    }
+
+    fun deletePooping(pooping: PoopingRead) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                uiState.value = PoopUiState.Loading
+                repository.deletePooping(pooping)
+                uiState.value = PoopUiState.Success
+            } catch (exception: Exception) {
+                // TODO error handling
+                uiState.value = PoopUiState.Error(exception)
+            }
+        }
+    }
+
+    fun patchForm(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                uiState.value = PoopUiState.Loading
+                val value = repository.getById(id)
+                if (value != null) {
+                    this@PoopViewModel.id.value = value.id
+                    hasPoop.value = value.hasPoop
+                    hasPiss.value = value.hasPiss
+                    notes.value = value.notes
+                    date.value = value.date
+                }
+            } catch (exception: Exception) {
+                uiState.value = PoopUiState.Error(exception)
             }
         }
     }

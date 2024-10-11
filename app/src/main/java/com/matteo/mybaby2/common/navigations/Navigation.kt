@@ -36,5 +36,12 @@ fun Navigation() {
         ) { backStackEntry ->
             UpsertPooping(navController)
         }
+        composable(
+            "${NavigationItem.Activities.route}/pooping/update/{id}",
+            listOf(navArgument("id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getInt("id")
+            UpsertPooping(navController, id = id)
+        }
     }
 }

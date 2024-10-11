@@ -46,15 +46,7 @@ fun UpsertBreastFeeding(
     navHostController: NavHostController,
     viewModel: BreastFeedingViewModel = koinViewModel(),
     id: Int? = null,
-    defaultValues: BreastFeedingUpsert? = null
 ) {
-    if(defaultValues != null) {
-        viewModel.updateLeftBreastDuration(defaultValues.leftBreast.toFloat())
-        viewModel.updateRightBreastDuration(defaultValues.rightBreast.toFloat())
-        viewModel.updateNotes(defaultValues.notes)
-        viewModel.updateDate(defaultValues.date)
-        viewModel.updateId(defaultValues.id)
-    }
     LaunchedEffect(id) {
         if(id != null) {
             viewModel.patchForm(id)
