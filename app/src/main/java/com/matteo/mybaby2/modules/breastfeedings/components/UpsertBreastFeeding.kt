@@ -23,12 +23,14 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.common.converters.DateConverters
@@ -43,6 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 fun UpsertBreastFeeding(
     navHostController: NavHostController,
     viewModel: BreastFeedingViewModel = koinViewModel(),
+    id: Int? = null,
     defaultValues: BreastFeedingUpsert? = null
 ) {
     if(defaultValues != null) {
@@ -52,11 +55,17 @@ fun UpsertBreastFeeding(
         viewModel.updateDate(defaultValues.date)
         viewModel.updateId(defaultValues.id)
     }
+    LaunchedEffect(id) {
+        if(id != null) {
+            viewModel.patchForm(id)
+        }
+    }
+
     var showDatePicker = remember { mutableStateOf(false) }
     return Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(R.string.add_breastfeeding)) },
+                title = { Text(text = if(id == null )stringResource(R.string.add_breastfeeding) else stringResource(R.string.edit_breastfeeding)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,

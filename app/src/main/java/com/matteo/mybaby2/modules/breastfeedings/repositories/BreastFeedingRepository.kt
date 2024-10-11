@@ -24,11 +24,19 @@ class BreastFeedingRepository(private val breastFeedingDao: BreastFeedingDao): I
         return breastFeedings.map(::fromEntity)
     }
 
+    override suspend fun getById(id: Int): BreastFeedingRead? {
+        return breastFeedingDao.getBreastFeedingById(id)?.let(::fromEntity)
+    }
+
     override suspend fun upsertBreastFeeding(breastFeeding: BreastFeedingUpsert) {
         breastFeedingDao.upsertBreastFeeding(toEntity(breastFeeding))
     }
 
     override suspend fun getBreastFeedingById(id: Int): BreastFeedingRead? {
         return breastFeedingDao.getBreastFeedingById(id)?.let(::fromEntity)
+    }
+
+    override suspend fun delete(breastFeeding: BreastFeedingRead) {
+        breastFeedingDao.delete(toEntity(breastFeeding))
     }
 }

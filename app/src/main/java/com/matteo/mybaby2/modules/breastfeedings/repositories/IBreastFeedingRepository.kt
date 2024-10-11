@@ -7,6 +7,8 @@ import java.time.LocalDate
 interface IBreastFeedingRepository {
     suspend fun getAll(): List<BreastFeedingRead>
     suspend fun getAllByDate(date: LocalDate): List<BreastFeedingRead>
+    suspend fun getById(id: Int): BreastFeedingRead?
     suspend fun upsertBreastFeeding(breastFeeding: BreastFeedingUpsert)
     suspend fun getBreastFeedingById(id: Int): BreastFeedingRead?
+    suspend fun delete(breastFeeding: BreastFeedingRead)
 }
