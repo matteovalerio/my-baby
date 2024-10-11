@@ -28,6 +28,8 @@ class StatisticsViewModel(
     ViewModel() {
     var breastFeedings = mutableStateOf<List<StatisticRead>>(emptyList())
         private set
+    var breastFeedingMinutes = mutableStateOf<List<StatisticRead>>(emptyList())
+        private set
     var diaperChanges = mutableStateOf<List<StatisticRead>>(emptyList())
         private set
     var uiState = mutableStateOf<UiState>(UiState.Loading)
@@ -47,6 +49,18 @@ class StatisticsViewModel(
                         StatisticRead(
                             date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                             breastFeedingsForDay.size
+                        )
+                    }.sortedBy { it.date }
+                this@StatisticsViewModel.breastFeedingMinutes.value =
+                    breastFeedings.groupBy { breastFeeding ->
+                        Instant.ofEpochMilli(breastFeeding.date)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                    }.map { (date, breastFeedingsForDay) ->
+
+                        StatisticRead(
+                            date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                            breastFeedingsForDay.sumOf { it.rightBreast.toInt() } + breastFeedingsForDay.sumOf { it.leftBreast.toInt() }
                         )
                     }.sortedBy { it.date }
                 uiState.value = UiState.Success
