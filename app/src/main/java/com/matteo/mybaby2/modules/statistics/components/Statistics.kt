@@ -77,10 +77,7 @@ private fun Inner(breastFeedingStats: List<StatisticRead>, poopingStats: List<St
                 ),
                 animationMode = AnimationMode.Together(delayBuilder = {
                     it * 500L
-                }),
-                labelProperties = LabelProperties(
-                    enabled = true,
-                    labels = breastFeedingStats.map { DateConverters.formatMillisToDate(it.date) })
+                })
             )
         }
         if(poopingStats.isNotEmpty()) {
@@ -104,9 +101,6 @@ private fun Inner(breastFeedingStats: List<StatisticRead>, poopingStats: List<St
                 animationMode = AnimationMode.Together(delayBuilder = {
                     it * 500L
                 }),
-                labelProperties = LabelProperties(
-                    enabled = true,
-                    labels = poopingStats.map { DateConverters.formatMillisToDate(it.date) })
             )
         }
         if(poopingStats.isEmpty() && breastFeedingStats.isEmpty()) {
