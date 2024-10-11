@@ -155,7 +155,7 @@ fun Home(
                 }
             }
             when (selectedItem.value) {
-                Tabs.BreastFeeding -> BreastFeedings(date = selectedDate.longValue)
+                Tabs.BreastFeeding -> BreastFeedings(date = selectedDate.longValue, navController = navController)
 
                 Tabs.Pooping -> Poopings(date = selectedDate.longValue)
 

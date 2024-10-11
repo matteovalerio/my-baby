@@ -19,4 +19,11 @@ object BreastFeedingMappings {
         notes = schema.notes,
         date = schema.date
     )
+    fun toEntity(schema: BreastFeedingRead): BreastFeedingEntity = BreastFeedingEntity(
+        id = schema.id,
+        leftBreastDuration = schema.leftBreast,
+        rightBreastDuration = schema.rightBreast,
+        notes = schema.notes,
+        date = schema.date
+    )
 }
