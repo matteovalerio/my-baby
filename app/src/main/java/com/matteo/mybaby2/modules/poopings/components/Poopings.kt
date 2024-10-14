@@ -2,19 +2,16 @@ package com.matteo.mybaby2.modules.poopings.components
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -22,14 +19,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
@@ -38,6 +37,7 @@ import com.matteo.mybaby2.modules.poopings.PoopViewModel
 import com.matteo.mybaby2.modules.poopings.schemas.PoopingRead
 import com.matteo.mybaby2.ui.components.LabeledText
 import com.matteo.mybaby2.ui.components.SwipableBackground
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -50,13 +50,16 @@ fun Poopings(
     navController: NavHostController,
     viewModel: PoopViewModel = koinViewModel()
 ) {
-    LaunchedEffect(date) {
+    LaunchedEffect(date, viewModel.poopings.value.size) {
         viewModel.getAllPoopingsByDate(date)
     }
     if (viewModel.poopings.value.isEmpty()) {
         return Text(stringResource(R.string.no_data), modifier = modifier)
     }
-    return Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    return Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             stringResource(
                 R.string.poop_number,
@@ -93,19 +96,19 @@ private fun Pooping(
     onEdit: (item: PoopingRead) -> Unit
 ) {
     val context = LocalContext.current
+    val isDialogOpen = remember { mutableStateOf(false) }
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             when (it) {
                 SwipeToDismissBoxValue.StartToEnd -> {
-                    onRemove(pooping)
-                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
+                    isDialogOpen.value = true
                 }
 
                 SwipeToDismissBoxValue.EndToStart -> {
                     onEdit(pooping)
                 }
 
-                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
+                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState true
             }
             return@rememberSwipeToDismissBoxState true
         },
@@ -161,6 +164,32 @@ private fun Pooping(
                     )
                 }
                 HorizontalDivider()
+                if (isDialogOpen.value) {
+                    val resetDismissState = {
+                        runBlocking { dismissState.snapTo(SwipeToDismissBoxValue.Settled) }
+                    }
+                    AlertDialog(
+                        onDismissRequest = {
+                            isDialogOpen.value = false
+                            resetDismissState()
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                onRemove(pooping)
+                                Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT)
+                                    .show()
+                                isDialogOpen.value = false
+                                resetDismissState()
+                            }) { Text(stringResource(R.string.delete)) }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                isDialogOpen.value = false
+                                resetDismissState()
+                            }) { Text(stringResource(R.string.cancel)) }
+                        },
+                        title = { Text(stringResource(R.string.are_you_sure_you_want_to_delete_this_item)) })
+                }
             }
         })
     }

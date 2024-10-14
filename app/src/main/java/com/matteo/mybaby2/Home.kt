@@ -73,12 +73,13 @@ fun Home(
     date: Long? = null,
     tab: Int? = null
 ) {
-    var selectedItem = rememberSaveable { mutableStateOf(if (tab != null) Tabs.entries[tab] else Tabs.BreastFeeding) }
+    var selectedItem =
+        rememberSaveable { mutableStateOf(if (tab != null) Tabs.entries[tab] else Tabs.BreastFeeding) }
     val items = listOf(Tabs.BreastFeeding, Tabs.Pooping, Tabs.Graphs)
     val selectedIcons = listOf(Icons.Filled.Fastfood, Icons.Filled.Wc, Icons.Filled.BarChart)
     val unselectedIcons =
         listOf(Icons.Outlined.Fastfood, Icons.Outlined.Wc, Icons.Outlined.BarChart)
-    val selectedDate = remember { mutableLongStateOf(date ?:Instant.now().toEpochMilli()) }
+    val selectedDate = remember { mutableLongStateOf(date ?: Instant.now().toEpochMilli()) }
     val isSelectingDate = remember { mutableStateOf(false) }
 
     return Scaffold(topBar = {
@@ -94,7 +95,7 @@ fun Home(
             ),
         )
     }, floatingActionButton = {
-        if(selectedItem.value!= Tabs.Graphs) {
+        if (selectedItem.value != Tabs.Graphs) {
             MultiFab(
                 fabIcon = Icons.Filled.Add,
                 fabOptions = listOf(
@@ -136,17 +137,29 @@ fun Home(
             }
         }
     }) { innerPadding ->
-        Column (
+        Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally){
-            if(selectedItem.value!= Tabs.Graphs) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (selectedItem.value != Tabs.Graphs) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     IconButton(onClick = {
-                        val date = Instant.ofEpochMilli(selectedDate.longValue).atZone(ZoneId.systemDefault()).toLocalDate()
-                        selectedDate.longValue = date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                    }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowLeft, contentDescription = "Back") }
+                        val date = Instant.ofEpochMilli(selectedDate.longValue)
+                            .atZone(ZoneId.systemDefault()).toLocalDate()
+                        selectedDate.longValue =
+                            date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+                                .toEpochMilli()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
+                            contentDescription = "Back"
+                        )
+                    }
                     TextButton(
                         modifier = Modifier
                             .wrapContentSize(),
@@ -170,16 +183,30 @@ fun Home(
 
                     }
                     IconButton(onClick = {
-                        val date = Instant.ofEpochMilli(selectedDate.longValue).atZone(ZoneId.systemDefault()).toLocalDate()
-                        selectedDate.longValue = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                    }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight, contentDescription = "Forward") }
+                        val date = Instant.ofEpochMilli(selectedDate.longValue)
+                            .atZone(ZoneId.systemDefault()).toLocalDate()
+                        selectedDate.longValue =
+                            date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+                                .toEpochMilli()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = "Forward"
+                        )
+                    }
                 }
             }
             HorizontalDivider()
             when (selectedItem.value) {
-                Tabs.BreastFeeding -> BreastFeedings(date = selectedDate.longValue, navController = navController)
+                Tabs.BreastFeeding -> BreastFeedings(
+                    date = selectedDate.longValue,
+                    navController = navController
+                )
 
-                Tabs.Pooping -> Poopings(date = selectedDate.longValue, navController = navController)
+                Tabs.Pooping -> Poopings(
+                    date = selectedDate.longValue,
+                    navController = navController
+                )
 
                 Tabs.Graphs -> Statistics()
             }

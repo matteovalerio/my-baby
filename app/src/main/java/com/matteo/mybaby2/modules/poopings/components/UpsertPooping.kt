@@ -37,15 +37,14 @@ import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.poopings.PoopViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.time.Instant
 
-
-// TODO add default values
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpsertPooping(
     navController: NavController,
     viewModel: PoopViewModel = koinViewModel(),
-    id: Int? = null
+    id: Int? = null,
 ) {
     LaunchedEffect(id) {
         if (id != null) {
@@ -97,7 +96,9 @@ fun UpsertPooping(
                 if (showDatePicker.value) {
                     DateTimePickerModal(
                         onDateSelected = { date -> viewModel.updateDate(date) },
-                        onDismiss = { showDatePicker.value = false })
+                        onDismiss = { showDatePicker.value = false },
+                        initialDate = Instant.now().toEpochMilli()
+                    )
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
