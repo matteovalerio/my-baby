@@ -29,4 +29,6 @@
     <string name="piss_number">Numero di pipì: %1$s</string>
     <string name="left_breast">Sinistra: %1$s min.</string>
     <string name="right_breast">Destra: %1$s min.</string>
+    <string name="are_you_sure_you_want_to_delete_this_item">Sei sicura di voler eliminare questo elemento?</string>
+    <string name="delete">Elimina</string>
 </resources>

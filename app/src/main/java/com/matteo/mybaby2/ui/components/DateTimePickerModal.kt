@@ -26,8 +26,9 @@ import java.time.ZoneId
 fun DateTimePickerModal(
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit,
+    initialDate: Long? = null
 ) {
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = null)
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDate)
     val timePickerState = rememberTimePickerState()
     val isShowingDate = remember{ mutableStateOf(true) }
 

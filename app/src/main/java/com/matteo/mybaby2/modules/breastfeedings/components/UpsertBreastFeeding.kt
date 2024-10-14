@@ -30,15 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.matteo.mybaby2.R
 import com.matteo.mybaby2.Tabs
 import com.matteo.mybaby2.common.converters.DateConverters
 import com.matteo.mybaby2.common.navigations.NavigationItem
 import com.matteo.mybaby2.modules.breastfeedings.BreastFeedingViewModel
-import com.matteo.mybaby2.modules.breastfeedings.schemas.BreastFeedingUpsert
 import org.koin.androidx.compose.koinViewModel
+import java.time.Instant
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +98,8 @@ fun UpsertBreastFeeding(
                 if (showDatePicker.value) {
                     DateTimePickerModal(
                         onDateSelected = { date -> viewModel.updateDate(date) },
-                        onDismiss = { showDatePicker.value = false })
+                        onDismiss = { showDatePicker.value = false },
+                        initialDate = Instant.now().toEpochMilli())
                 }
 
                 Column {
